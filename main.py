@@ -254,9 +254,10 @@ def main():
 
     # Set up optimizer
     optimizer = torch.optim.AdamW(params=[
-        {'params': model.backbone.parameters(), 'lr': 0.1 * opts.lr},
-        {'params': model.classifier.parameters(), 'lr': opts.lr},
-    ], lr=opts.lr, momentum=0.9, weight_decay=opts.weight_decay)
+    {'params': model.backbone.parameters(), 'lr': 0.1 * opts.lr},
+    {'params': model.classifier.parameters(), 'lr': opts.lr},
+    ], lr=opts.lr, weight_decay=opts.weight_decay)
+
     # optimizer = torch.optim.SGD(params=model.parameters(), lr=opts.lr, momentum=0.9, weight_decay=opts.weight_decay)
     # torch.optim.lr_scheduler.StepLR(optimizer, step_size=opts.lr_decay_step, gamma=opts.lr_decay_factor)
     if opts.lr_policy == 'poly':
@@ -265,49 +266,7 @@ def main():
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=opts.step_size, gamma=0.1)
 
     # Set up criterion
-    # criterion = utils.get_loss(opts.loss_type)import logging
-
-# Create a logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# Create a file handler and a stream handler
-file_handler = logging.FileHandler('deeplabv3plus.log')
-stream_handler = logging.StreamHandler()
-
-# Create a formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-stream_handler.setFormatter(formatter)
-
-# Add the handlers to the logger
-logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
-
-# Replace print statements with logger statements
-# ...
-
-# In the main function
-def main():
-    # ...
-    logger.info("Device: %s" % device)
-    # ...
-    logger.info("Dataset: %s, Train set: %d, Val set: %d" % (opts.dataset, len(train_dst), len(val_dst)))
-    # ...
-    logger.info("Model restored from %s" % opts.ckpt)
-    # ...
-    logger.info("Training state restored from %s" % opts.ckpt)
-    # ...
-    logger.info("Model saved as %s" % path)
-    # ...
-    logger.info("Epoch %d, Itrs %d/%d, Loss=%f" % (cur_epochs, cur_itrs, opts.total_itrs, interval_loss))
-    # ...
-    logger.info("validation...")
-    # ...
-    logger.info("Validation score: %s" % metrics.to_str(val_score))
-    # ...
-    logger.info("Best score: %f" % best_score)
-    # ...
+    # criterion = utils.get_loss(opts.loss_type)
     if opts.loss_type == 'focal_loss':
         criterion = utils.FocalLoss(ignore_index=255, size_average=True)
     elif opts.loss_type == 'cross_entropy':
@@ -374,7 +333,6 @@ def main():
 
             optimizer.zero_grad()
             outputs = model(images)
-            print("Unique labels in batch:", torch.unique(labels))
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
