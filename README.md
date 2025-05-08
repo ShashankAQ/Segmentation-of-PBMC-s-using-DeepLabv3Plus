@@ -85,8 +85,8 @@ Make sure the dataset format is exactly like this
                 /ImageSets
                     Segmentation\
                             trainval.txt # <= labels of training images + labels of val images
-                            train.txt # <= labels of training images
-                            val.txt  # <= labels of val images
+                            train.txt # <= labels of training images (images have to be in .jpg)
+                            val.txt  # <= labels of val images (masks have to be in .png)
 
                 /SegmentationClass # <= Segmentation masks
 
