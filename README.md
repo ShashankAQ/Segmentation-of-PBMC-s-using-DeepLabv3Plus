@@ -34,6 +34,15 @@ Image folder :
 ```python
 python predict.py --mode batch --input_dir path/to/images --output_dir path/to/save/results --ckpt path/to/model.pth
 ```
+Predict using app:
+```python
+pip install streamlit
+```
+Make sure you replace the model directory in the app.py
+```python
+streamlit run app.py
+```
+
 ![image](https://github.com/user-attachments/assets/b2476eda-1760-4b95-afea-985f0bd31df1)
 
 ## Training the model
